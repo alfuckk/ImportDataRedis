@@ -1,3 +1,3 @@
 ##  ImportDataRedis
 
-使用了多线程插入Redis。
+使用协程任务插入Redis。

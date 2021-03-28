@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -18,12 +19,14 @@ type Db struct {
 var rdb *redis.Client
 var ctx = context.Background()
 
-func (db Db) ConnDb() (err error) {
+func (db Db) ConnDb(dbNum int) (err error) {
 	rdb = redis.NewClient(&redis.Options{
 		Addr:     db.Addr,
 		Password: db.Password, // no password set
-		DB:       db.DB,       // use default DB
+		DB:       dbNum,       // use default DB
 	})
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	_, err = rdb.Ping(ctx).Result()
 	return err
 }
